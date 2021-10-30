@@ -1,0 +1,182 @@
+logging:
+  file: /opt/apps/moneytap/logs/rest/rest.log
+
+
+sentry:
+  dsn: https://75c6192a80ff4e5aa022bf422d485983@o567854.ingest.sentry.io/5714686
+  traces-sample-rate: 0.2
+  logging:
+    minimum-event-level: warn
+    minimum-breadcrumb-level: debug
+    send-default-pii: true
+  environment: dev
+  use-git-commit-id-as-release: true
+
+
+environment:
+  server:
+    id: local
+
+spring:
+  liquibase:
+    enabled: true
+  servlet:
+    multipart:
+      enabled: false
+  jpa:
+    open-in-view: false
+  main:
+    allow-bean-definition-overriding: true
+reactivate:
+  cardIssued:
+    fetch: false
+    startDate: "2021-01-01"
+    endDate: "2021-01-30"
+
+infobip:
+  smsBaseUrl: https://dummy_url.in
+  voiceCredential: Basic DKJENnOEM=+NKEKWKW
+
+mt:
+  hibernate:
+    cache:
+      enabled: false
+      provider:
+        config: hibernate-redis.properties
+  cronEnabled: false
+  otpService: "fecOtpService"
+  ifscApi: "defaultIfscApi"
+  queueProvider: "AWS_SQS"
+  fullname:
+    regx: "^a-zA-Z"
+  pattern:
+    mobile: "^[987654]{1}[\\d]{9}$"
+  validation:
+    name:
+      length:
+        min: 2
+        max: 78
+  sanatization:
+    name: true
+
+
+
+partner:
+  default:
+    panValidationEnabled: true
+    country: "INDIA"
+    maxWithrawalLimit: 200000
+    impsOtpVerificationRequired: true
+    beneficiaryRequired: true
+    maxPercentageForLimitUsage: 100
+  rbl:
+    panValidationEnabled: true
+  dmi:
+    panValidationEnabled: false
+  fec:
+    panValidationEnabled: false
+    country: "VIETNAM"
+    maxWithrawalLimit: 100000000
+    impsOtpVerificationRequired: true
+    beneficiaryRequired: false
+    minimumIncomeAllowed: 3000000
+    isPilotPhase: true
+    isUat: true
+
+vmg:
+  fetch:
+    enable: false
+    NumberOfQueryPerPage: 50
+    VmgFetchFromDate: 2020-08-02
+    VmgFetchToDate: 2020-12-29
+
+cloud:
+  aws:
+    sqs:
+      endpoint: http://localhost:9324
+      credentials:
+        accessKey: ""
+        secretKey: ""
+    s3:
+      accessKey: "1234567890123456"
+      secretKey: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+      endpoint: http://localhost:9000
+      bucketName: s3docs
+      maxConnections: 20
+      clients:
+        -
+          bucketName: s3docs
+          useDefault: true
+        -
+          bucketName: repaymentCash
+          accessKey: 1234567890123456
+          secretKey: ABCDEFGHIJKLMNOPQRSTUVWXYZ
+          baseUrl: http://localhost:9000
+          maxConnections: 20
+        -
+          bucketName: bancaproducts
+          accessKey: 1234567890123456
+          secretKey: ABCDEFGHIJKLMNOPQRSTUVWXYZ
+          baseUrl: http://localhost:9000
+          maxConnections: 20
+
+freshdesk:
+  baseurl: http://localhost:9049
+  cc-email: hello@moneytap.vn
+
+otpSmsProvider: valueFirst
+transactionalSmsProvider: valueFirst
+defaultSmsProvider: smsInfy
+motpSmsProvider: smsInfy
+
+transactional:
+  url: http://api.myvaluefirst.com/psms/servlet/psms.JsonEservice
+  username: moneytapxmlotp
+  password: mnytp031
+otp:
+  url: http://api2.myvaluefirst.com/smpp/sendsms
+  username: moneytaphtpotp
+  password: mntap567
+
+
+apns:
+    certificatePath: /home/user/Downloads/prod_apns.p12
+    password: moneytap@123
+
+salvage:
+  waiting:
+    hours: 3
+  enabled: false
+
+---
+
+spring:
+  profiles: test
+  datasource:
+    username: mwyn
+    password: nywm
+    database: cashindb
+    port: ${DB_PORT:25432}
+    server: ${DB_HOST:localhost}
+redis:
+  port: 26379
+cloud:
+  aws:
+    sqs:
+      endpoint: http://localhost:29324
+    s3:
+      endpoint: http://localhost:29000
+logging:
+  file: /tmp/rest.log
+
+---
+spring:
+  profiles: dev
+sentry:
+  environment: dev
+
+---
+spring:
+  profiles: prod
+sentry:
+  environment: prod
