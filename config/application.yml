@@ -1,5 +1,5 @@
 logging:
-  file: /opt/apps/moneytap/logs/rest/rest.log
+  file: /opt/apps/moneytap/logs/first-practice/rest.log
 
 
 sentry:

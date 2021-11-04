@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+	<changeSet author="ELANGO" id="20200616_01">
+
+		<!-- ********************************************************************* -->
+		<!--    USER                                                               -->
+		<!-- ********************************************************************* -->
+		<createTable tableName="mt_idm_user">
+			<column name="id" type="CHAR(25)">
+				<constraints primaryKey="true" primaryKeyName="mt_idm_user_pk"/>
+			</column>
+			<column name="username" type="VARCHAR(256)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="password" type="TEXT">
+				<constraints nullable="false"/>
+			</column>
+
+			<column name="name" type="VARCHAR(128)"/>
+			<column name="email" type="VARCHAR(256)"/>
+			<column name="phone" type="VARCHAR(16)"/>
+
+			<column name="org_code" type="VARCHAR(256)"/>
+			<column name="manager_id" type="VARCHAR(25)"/>
+
+			<column name="account_enabled" type="BOOL" defaultValueBoolean="true"/>
+			<column name="reset_password"  type="BOOL" defaultValueBoolean="false"/>
+
+			<!-- audit columns -->
+			<column name="created_at" type="TIMESTAMP(6) WITH TIME ZONE">
+				<constraints nullable="false"/>
+			</column>
+			<column name="modified_at" type="TIMESTAMP(6) WITH TIME ZONE">
+				<constraints nullable="false"/>
+			</column>
+			<column name="created_by" type="VARCHAR(64)"/>
+			<column name="modified_by" type="VARCHAR(64)"/>
+
+			<column name="is_deleted" type="BOOL" defaultValueBoolean="false"/>
+		</createTable>
+
+		<addUniqueConstraint constraintName="mt_idm_user_username_uk"
+							 tableName="mt_idm_user" columnNames="username"/>
+		<addUniqueConstraint constraintName="mt_idm_user_email_uk"
+							 tableName="mt_idm_user" columnNames="email"/>
+		<addUniqueConstraint constraintName="mt_idm_user_phone_uk"
+							 tableName="mt_idm_user" columnNames="phone"/>
+
+		<!-- ********************************************************************* -->
+		<!--    ROLE                                                               -->
+		<!-- ********************************************************************* -->
+		<createTable tableName="mt_idm_role">
+			<column name="id" type="CHAR(25)">
+				<constraints primaryKey="true" primaryKeyName="mt_idm_role_pk"/>
+			</column>
+			<column name="role_name" type="VARCHAR(256)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="role_description" type="TEXT"/>
+
+			<!-- audit columns -->
+			<column name="created_at" type="TIMESTAMP(6) WITH TIME ZONE">
+				<constraints nullable="false"/>
+			</column>
+			<column name="modified_at" type="TIMESTAMP(6) WITH TIME ZONE">
+				<constraints nullable="false"/>
+			</column>
+			<column name="created_by" type="VARCHAR(64)"/>
+			<column name="modified_by" type="VARCHAR(64)"/>
+
+			<column name="is_deleted" type="BOOL" defaultValueBoolean="false"/>
+		</createTable>
+
+		<addUniqueConstraint constraintName="mt_idm_role_name_uk"
+							 tableName="mt_idm_role" columnNames="role_name"/>
+
+		<!-- ********************************************************************* -->
+		<!--    USER ROLE ASSOCIATION                                              -->
+		<!-- ********************************************************************* -->
+		<createTable tableName="mt_idm_user_role">
+			<column name="id" type="CHAR(25)">
+				<constraints primaryKey="true" primaryKeyName="mt_idm_user_role_pk"/>
+			</column>
+			<column name="username" type="VARCHAR(256)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="role_name" type="VARCHAR(256)">
+				<constraints nullable="false"/>
+			</column>
+
+			<!-- audit columns -->
+			<column name="created_at" type="TIMESTAMP(6) WITH TIME ZONE">
+				<constraints nullable="false"/>
+			</column>
+			<column name="modified_at" type="TIMESTAMP(6) WITH TIME ZONE">
+				<constraints nullable="false"/>
+			</column>
+			<column name="created_by" type="VARCHAR(64)"/>
+			<column name="modified_by" type="VARCHAR(64)"/>
+
+			<column name="is_deleted" type="BOOL" defaultValueBoolean="false"/>
+		</createTable>
+
+		<addUniqueConstraint constraintName="mt_idm_username_role_name_uk"
+							 tableName="mt_idm_user_role" columnNames="username, role_name"/>
+
+		<createIndex indexName="mt_idm_user_role_username_idx" tableName="mt_idm_user_role" >
+			<column name="username"/>
+		</createIndex>
+		<createIndex indexName="mt_idm_user_role_rolename_idx" tableName="mt_idm_user_role" >
+			<column name="role_name"/>
+		</createIndex>
+
+
+		<!-- ********************************************************************* -->
+		<!--    GROUP                                                              -->
+		<!-- ********************************************************************* -->
+		<createTable tableName="mt_idm_group">
+			<column name="id" type="CHAR(25)">
+				<constraints primaryKey="true" primaryKeyName="mt_idm_group_pk"/>
+			</column>
+			<column name="group_name" type="VARCHAR(256)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="group_description" type="TEXT"/>
+
+			<!-- audit columns -->
+			<column name="created_at" type="TIMESTAMP(6) WITH TIME ZONE">
+				<constraints nullable="false"/>
+			</column>
+			<column name="modified_at" type="TIMESTAMP(6) WITH TIME ZONE">
+				<constraints nullable="false"/>
+			</column>
+			<column name="created_by" type="VARCHAR(64)"/>
+			<column name="modified_by" type="VARCHAR(64)"/>
+
+			<column name="is_deleted" type="BOOL" defaultValueBoolean="false"/>
+		</createTable>
+
+		<addUniqueConstraint constraintName="mt_idm_group_name_uk"
+							 tableName="mt_idm_group" columnNames="group_name"/>
+
+		<!-- ********************************************************************* -->
+		<!--    USER GROUP ASSOCIATION                                             -->
+		<!-- ********************************************************************* -->
+		<createTable tableName="mt_idm_user_group">
+			<column name="id" type="CHAR(25)">
+				<constraints primaryKey="true" primaryKeyName="mt_idm_user_group_pk"/>
+			</column>
+			<column name="username" type="VARCHAR(256)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="group_name" type="VARCHAR(256)">
+				<constraints nullable="false"/>
+			</column>
+
+			<!-- audit columns -->
+			<column name="created_at" type="TIMESTAMP(6) WITH TIME ZONE">
+				<constraints nullable="false"/>
+			</column>
+			<column name="modified_at" type="TIMESTAMP(6) WITH TIME ZONE">
+				<constraints nullable="false"/>
+			</column>
+			<column name="created_by" type="VARCHAR(64)"/>
+			<column name="modified_by" type="VARCHAR(64)"/>
+
+			<column name="is_deleted" type="BOOL" defaultValueBoolean="false"/>
+		</createTable>
+
+		<addUniqueConstraint constraintName="mt_idm_username_group_name_uk"
+							 tableName="mt_idm_user_group" columnNames="username, group_name"/>
+
+		<createIndex indexName="mt_idm_user_group_username_idx" tableName="mt_idm_user_group" >
+			<column name="username"/>
+		</createIndex>
+		<createIndex indexName="mt_idm_user_group_groupname_idx" tableName="mt_idm_user_group" >
+			<column name="group_name"/>
+		</createIndex>
+
+		<!-- ********************************************************************* -->
+		<!--    ORG                                                                -->
+		<!-- ********************************************************************* -->
+		<createTable tableName="mt_idm_org">
+			<column name="id" type="CHAR(25)">
+				<constraints primaryKey="true" primaryKeyName="mt_idm_org_pk"/>
+			</column>
+			<column name="org_code" type="VARCHAR(256)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="org_type" type="VARCHAR(64)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="org_name" type="VARCHAR(256)">
+				<constraints nullable="false"/>
+			</column>
+
+			<!-- audit columns -->
+			<column name="created_at" type="TIMESTAMP(6) WITH TIME ZONE">
+				<constraints nullable="false"/>
+			</column>
+			<column name="modified_at" type="TIMESTAMP(6) WITH TIME ZONE">
+				<constraints nullable="false"/>
+			</column>
+			<column name="created_by" type="VARCHAR(64)"/>
+			<column name="modified_by" type="VARCHAR(64)"/>
+
+			<column name="is_deleted" type="BOOL" defaultValueBoolean="false"/>
+		</createTable>
+
+		<addUniqueConstraint constraintName="mt_idm_org_code_uk"
+							 tableName="mt_idm_org" columnNames="org_code"/>
+		<createIndex indexName="mt_idm_org_type_idx" tableName="mt_idm_org" >
+			<column name="org_type"/>
+		</createIndex>
+
+	</changeSet>
+
+</databaseChangeLog>
