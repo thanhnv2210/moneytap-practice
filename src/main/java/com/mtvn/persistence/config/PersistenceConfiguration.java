@@ -46,7 +46,12 @@ import java.util.Properties;
 @Slf4j
 @Configuration
 @EnableJpaAuditing
-@EnableJpaRepositories({"com.moneytap.entity.repository", "com.mwyn.priority.dao","com.mwyn.persistence.dao","com.moneytap.common.persistence"})
+@EnableJpaRepositories({
+		"com.mtvn.auth.server.repository"
+		,"com.mtvn.entity.repository"
+		,"com.mtvn.priority.dao"
+		,"com.mtvn.persistence.dao"
+		,"com.mtvn.common.persistence"})
 @EnableTransactionManagement
 public class PersistenceConfiguration {
 
@@ -145,7 +150,7 @@ public class PersistenceConfiguration {
 		em.setDataSource(dataSource());
 		em.setJpaDialect(new HibernateJpaDialect());
 		em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-		em.setPackagesToScan("com.mwyn");
+		em.setPackagesToScan("com.mtvn");
 		em.setJpaProperties(hibernateProperties());
 		em.afterPropertiesSet();
 		return em.getObject();
@@ -221,7 +226,7 @@ public class PersistenceConfiguration {
 	}
 
 	@Bean
-	@ConditionalOnProperty(name="spring.liquibase.enabled", havingValue="true", matchIfMissing=false)
+	@ConditionalOnProperty(name="spring.liquibase.enabled", havingValue="true")
 	public SpringLiquibase liquibase() {
 		log.info("Initializing Liquibase from classpath:db/changelog/db.changelog-master.xml");
 		SpringLiquibase liquibase = new SpringLiquibase();
@@ -235,21 +240,18 @@ public class PersistenceConfiguration {
 	@Order(Integer.MAX_VALUE)
 	@ConditionalOnMissingBean
 	public AuditorAware<String> auditorAware() {
-		return new AuditorAware<String>() {
-			@Override
-			public Optional<String> getCurrentAuditor() {
-				String retVal = null;
-				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-				if(auth != null && auth.isAuthenticated()) {
-					if(auth.getPrincipal() instanceof UserDetails){
-						UserDetails user = ((UserDetails) auth.getPrincipal());
-						if(user != null && StringUtils.hasText(user.getUsername()))
-							retVal = user.getUsername();
-					}
+		return () -> {
+			String retVal = null;
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			if(auth != null && auth.isAuthenticated()) {
+				if(auth.getPrincipal() instanceof UserDetails){
+					UserDetails user = ((UserDetails) auth.getPrincipal());
+					if(user != null && StringUtils.hasText(user.getUsername()))
+						retVal = user.getUsername();
 				}
-				retVal = StringUtils.hasText(retVal) ? retVal : "SYSTEM";
-				return Optional.of(StringUtils.trimUpto(retVal, 32));
 			}
+			retVal = StringUtils.hasText(retVal) ? retVal : "SYSTEM";
+			return Optional.of(StringUtils.trimUpto(retVal, 32));
 		};
 	}
 }

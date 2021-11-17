@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+	<changeSet author="david (generated)" id="1636051255124-1">
+		<createTable tableName="address">
+			<column autoIncrement="true" name="id" type="INT">
+				<constraints primaryKey="true" primaryKeyName="addressPK"/>
+			</column>
+			<column name="createdat" type="timestamp">
+				<constraints nullable="false"/>
+			</column>
+			<column name="isarchived" type="BOOLEAN">
+				<constraints nullable="false"/>
+			</column>
+			<column name="isdeleted" type="BOOLEAN">
+				<constraints nullable="false"/>
+			</column>
+			<column name="modifiedat" type="timestamp">
+				<constraints nullable="false"/>
+			</column>
+			<column name="addressline1" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="addressline2" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="address_type" type="VARCHAR(255)"/>
+			<column name="banker_edited_addressline1" type="VARCHAR(255)"/>
+			<column name="banker_edited_addressline2" type="VARCHAR(255)"/>
+			<column name="banker_edited_city" type="VARCHAR(255)"/>
+			<column name="banker_edited_pincode" type="INT"/>
+			<column name="banker_edited_state" type="VARCHAR(255)"/>
+			<column name="city" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="city_subdivision_1" type="VARCHAR(32)"/>
+			<column name="city_subdivision_2" type="VARCHAR(32)"/>
+			<column name="country" type="VARCHAR(255)"/>
+			<column name="accuracy" type="NUMBER(19, 2)"/>
+			<column name="latitude" type="NUMBER(19, 2)"/>
+			<column name="longitude" type="NUMBER(19, 2)"/>
+			<column name="landmark" type="VARCHAR(255)"/>
+			<column name="pincode" type="INT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="state" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+
+</databaseChangeLog>
