@@ -21,6 +21,7 @@ import org.springframework.dao.annotation.PersistenceExceptionTranslationPostPro
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate5.HibernateExceptionTranslator;
 import org.springframework.orm.hibernate5.SpringSessionContext;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -51,6 +52,7 @@ import java.util.Properties;
 		,"com.mtvn.entity.repository"
 		,"com.mtvn.priority.dao"
 		,"com.mtvn.persistence.dao"
+		,"com.mtvn.persistence.repository"
 		,"com.mtvn.common.persistence"})
 @EnableTransactionManagement
 public class PersistenceConfiguration {
@@ -58,6 +60,8 @@ public class PersistenceConfiguration {
 	@Value("${spring.datasource.username:#{null}}") private String username;
 	@Value("${spring.datasource.password:#{null}}") private String password;
 	@Value("${spring.datasource.database:#{null}}") private String database;
+	@Value("${spring.datasource.driver-class-name:#{null}}") private String driverClassName;
+	@Value("${spring.datasource.url:#{null}}") private String url;
 	@Value("${spring.datasource.server:#{null}}") private String server;
 	@Value("${spring.datasource.port:#{null}}") private Integer port;
 	@Value("${spring.datasource.hikari.maximum-pool-size:#{null}}") private Integer maxPoolSize;
@@ -69,6 +73,7 @@ public class PersistenceConfiguration {
 
 	private static final String SHOW_SQL = "hibernate.show_sql";
 	private static final String FORMAT_SQL = "hibernate.format_sql";
+
 
 	private int getMaxPoolSize() {
 		if(this.maxPoolSize == null)
@@ -97,6 +102,18 @@ public class PersistenceConfiguration {
 			this.connectionTimeout = DynamicPropertyFactory.getInstance().getLongProperty("persistence.connectionTimeout", 5000).getValue();
 		log.debug("connectionTimeout: {}", connectionTimeout);
 		return connectionTimeout;
+	}
+
+	private String getDatabaseDriverClassName(){
+		if(!StringUtils.hasText(this.driverClassName))
+			this.driverClassName = DynamicPropertyFactory.getInstance().getStringProperty("persistence.driverClassName", "org.postgresql.ds.PGSimpleDataSource").getValue();
+		return this.driverClassName;
+	}
+
+	private String getDatabaseUrl(){
+		if(!StringUtils.hasText(this.url))
+			this.url = DynamicPropertyFactory.getInstance().getStringProperty("persistence.url", "").getValue();
+		return this.url;
 	}
 
 	private String getDatabaseName() {
@@ -130,6 +147,15 @@ public class PersistenceConfiguration {
 
 	@Bean
 	public DataSource dataSource() {
+		if(getDatabaseDriverClassName().equals("org.h2.Driver")) {
+			DriverManagerDataSource dataSource = new DriverManagerDataSource();
+			dataSource.setDriverClassName(getDatabaseDriverClassName());
+			dataSource.setUrl(getDatabaseUrl());
+			dataSource.setUsername(getUsername());
+			dataSource.setPassword(getPassword());
+			return dataSource;
+		}
+
 		HikariDataSource ds = new HikariDataSource();
 		ds.setDataSourceClassName("org.postgresql.ds.PGSimpleDataSource");
 		ds.addDataSourceProperty("databaseName", getDatabaseName());
@@ -163,7 +189,7 @@ public class PersistenceConfiguration {
 		props.put(Environment.SHOW_SQL, getShowSql());
 		props.put(Environment.FORMAT_SQL, getFormatSql());
 		props.put(Environment.USE_SQL_COMMENTS, false);
-		props.put(Environment.GENERATE_STATISTICS, true);
+		// props.put(Environment.GENERATE_STATISTICS, true);
 		props.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, SpringSessionContext.class.getName());
 		props.put(Environment.ENABLE_LAZY_LOAD_NO_TRANS, true);
 		props.put(Environment.CONNECTION_HANDLING, PhysicalConnectionHandlingMode.DELAYED_ACQUISITION_AND_RELEASE_AFTER_TRANSACTION);

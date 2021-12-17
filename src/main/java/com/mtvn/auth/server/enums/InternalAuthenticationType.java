@@ -1,5 +1,5 @@
 package com.mtvn.auth.server.enums;
 
-public enum AuthenticationType {
+public enum InternalAuthenticationType {
     UNKNOWN, JWT, PASSWORD
 }

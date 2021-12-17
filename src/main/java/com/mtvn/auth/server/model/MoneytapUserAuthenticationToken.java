@@ -1,6 +1,6 @@
 package com.mtvn.auth.server.model;
 
-import com.mtvn.auth.server.enums.AuthenticationType;
+import com.mtvn.auth.server.enums.InternalAuthenticationType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class MoneytapUserAuthenticationToken implements Authentication {
     // TODO will update this class later
     private Optional<UserDetailModel> userDetailModel;
-    private AuthenticationType authType = AuthenticationType.UNKNOWN;
+    private InternalAuthenticationType authType = InternalAuthenticationType.UNKNOWN;
     private String token;
 
     public MoneytapUserAuthenticationToken(
