@@ -1,16 +1,17 @@
-package com.mtvn.rest.service;
+package com.mtvn.rest.service.impl;
 
 import com.mtvn.auth.server.repository.UserRepository;
 import com.mtvn.persistence.entities.auth.User;
-import lombok.RequiredArgsConstructor;
+import com.mtvn.rest.service.RegisterUseCaseV3;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
-public class RegisterUseCase {
-    private final UserRepository userRepository;
+public class RegisterUseCaseV3Impl implements RegisterUseCaseV3 {
+    @Autowired
+    private UserRepository userRepository;
 
     public User registerUser(User user) {
         return userRepository.save(user);

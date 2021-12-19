@@ -1,0 +1,38 @@
+version: "3"
+services:
+  myApp1:
+    image: "springio/first_practice:latest"
+    container_name: "myFirstPractice"
+    volumes:
+      - /opt/apps/moneytap/logs/first-practice:/opt/apps/moneytap/logs/first-practice
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://dbserver1:5432/mydb
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=admin
+    ports:
+      - "8081:8081"
+    networks:
+      - spring-cloud-network
+networks:
+  spring-cloud-network:
+    driver: bridge
+#  dbserver1:
+#    image: "postgres:11.4"
+#    container_name: "mydb1"
+#    environment:
+#      POSTGRES_USER: admin
+#      POSTGRES_PASSWORD: admin
+#      #POSTGRES_MULTIPLE_DATABASES: cashindb
+#      POSTGRES_DB: mydb
+#      LC_COLLATE: en_US.utf8
+#      LC_CTYPE: en_US.utf8
+#      ENCODING: UTF8
+#      TEMPLATE: template0
+#    ports:
+#      - "5432:5432"
+#
+#  redis1:
+#    image: "redis:alpine"
+#    container_name: "myredis1"
+#    ports:
+#      - "6379:6379"

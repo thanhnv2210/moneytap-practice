@@ -2,26 +2,25 @@ package com.mtvn.rest.controller.shared;
 
 import com.mtvn.auth.server.enums.InternalAuthenticationType;
 import com.mtvn.enums.AuthenticationType;
+import com.mtvn.rest.service.DropdownService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/shared")
 public class DropdownController {
 
+    @Autowired
+    DropdownService dropdownService;
+
     @GetMapping("/companies")
-    private ResponseEntity<Map<String, String>> getCompanyList(){
-        return ResponseEntity.ok(
-                new HashMap<String, String>() {{
-                    put("key1", "value1");
-                    put("key2", "value2");
-                }}
-        );
+    public ResponseEntity<Map<String, String>> getCompanyList(){
+        return ResponseEntity.ok(dropdownService.getCompanyList());
     }
 
     @GetMapping("/auth/internal-type")
