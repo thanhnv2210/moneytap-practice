@@ -19,7 +19,6 @@ public class JwtConfig {
     @PostConstruct
     private void init(){
         log.info("issuer:{}",issuer);
-        log.info("certificates:{}", certificates);
     }
 
 

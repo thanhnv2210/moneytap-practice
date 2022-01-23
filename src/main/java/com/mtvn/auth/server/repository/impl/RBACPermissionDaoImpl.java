@@ -3,6 +3,8 @@ package com.mtvn.auth.server.repository.impl;
 import com.mtvn.auth.server.model.RBACPermission;
 import com.mtvn.auth.server.repository.RBACPermissionDao;
 import com.mtvn.persistence.entities.AppRole;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -11,8 +13,20 @@ import java.util.List;
 import java.util.Set;
 
 @Service
+@Slf4j
 public class RBACPermissionDaoImpl implements RBACPermissionDao {
     String[] rbacPermissions = new String[0];
+
+    public RBACPermissionDaoImpl() {
+        try {
+            log.info("Reading rbac permission from rbacPermission.properties");
+            rbacPermissions =
+                    IOUtils.toString(Thread.currentThread().getContextClassLoader().getResourceAsStream("rbacPermission.properties")).split("\n");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("Exception Reading rbac permission from rbacPermission.properties {}", e);
+        }
+    }
 
     @Override
     public List<RBACPermission> getRBACPermissionsFromFile() throws Exception {

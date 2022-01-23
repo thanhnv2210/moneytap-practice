@@ -40,12 +40,12 @@ public class UserAuthServiceImpl implements UserAuthService {
 
     @Override
     public Optional<UserDetailModel> verifyToken(String token) {
-        return Optional.empty();
+        return authVerifier.verifyToken(token);
     }
 
     @Override
     public List<JwkCertificateModel> getCertificates() {
-        return null;
+        return authProvider.getJwkCertificates();
     }
 
     private Optional<UserDetailModel> loadUser(String username) {

@@ -18,8 +18,9 @@ public class MoneytapUserAuthenticationToken implements Authentication {
     private String token;
 
     public MoneytapUserAuthenticationToken(
-            Optional<UserDetailModel> userDetailModel, String token){
+            Optional<UserDetailModel> userDetailModel, InternalAuthenticationType type, String token){
         this.userDetailModel = userDetailModel;
+        this.authType = type;
         this.token = token;
     }
 

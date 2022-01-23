@@ -2,11 +2,7 @@ package com.mtvn.config.security;
 
 import com.netflix.config.DynamicPropertyFactory;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -19,7 +15,7 @@ import java.util.List;
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled=true, proxyTargetClass=true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    //@Autowired private OAuthUserDetailService userDetailsService;
+//    @Autowired private OAuthUserDetailService userDetailsService;
     /*@Autowired private MwynAuthenticationProvider authProvider;*/
 
     /**
@@ -37,9 +33,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //        } else {
 //            auth.userDetailsService(userDetailsService);
 //        }*/
-//        //auth.userDetailsService(userDetailsService);
+//        auth.userDetailsService(userDetailsService);
 //    }
-
+//
 //    @Override
 //    @Bean
 //    public AuthenticationManager authenticationManagerBean() throws Exception {
